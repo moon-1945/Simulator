@@ -24,6 +24,5 @@ public class SimulatorApplication implements CommandLineRunner {
 		kafkaProducerService.sendMessage("lab5", "user-1", "Message with key 1");
 		kafkaProducerService.sendMessage("lab5","user-2", "Message with key 2");
 	}
-
 }
 
