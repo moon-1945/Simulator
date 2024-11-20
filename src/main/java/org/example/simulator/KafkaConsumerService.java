@@ -1,5 +1,7 @@
 package org.example.simulator;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.simulator.schemas.Building;
 import org.example.simulator.utils.JsonValidator;
 import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -29,12 +31,18 @@ public class KafkaConsumerService {
 
 			if (isValid) {
 				System.out.println("Schema is valid.");
+
+				ObjectMapper objectMapper = new ObjectMapper();
+				Building building = objectMapper.readValue(schema, Building.class);
+
+				Building.getInstance().storeBuildingData(building.getBuildingId(), building.getFloors());
+
 				for (int i = 1; i <= 10; i++) {
+					// TODO: add algorithm to generate and send violations
 					Map<String, String> violation = Map.of(
 							"violationId", String.valueOf(i),
 							"description", "Violation #" + i
 					);
-
 					kafkaTemplate.send("violations_topic", violation.toString());
 				}
 			} else {

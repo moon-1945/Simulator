@@ -12,5 +12,5 @@ kafka-console-producer --broker-list localhost:9092 --topic simulator_topic
 ```
 This could help you to send messages directly by entering in console message content, for example:
 ```
-{"rooms":[{"roomId":101,"area":45.5,"windows":2,"doors":1,"sensors":[{"sensorId":1001,"sensorType":"Temperature","sensorValue":22.5,"thresholds":{"min":18.0,"max":25.0},"status":"Active"}]}]}
+{"buildingId":1,"floors":[{"floorNumber":1,"rooms":[{"roomId":101,"area":45.5,"windows":2,"doors":1,"sensors":[{"sensorId":1001,"sensorType":"Temperature","sensorValue":22.5,"thresholds":{"min":18.0,"max":25.0},"status":"Active"}]}]}]}
 ```

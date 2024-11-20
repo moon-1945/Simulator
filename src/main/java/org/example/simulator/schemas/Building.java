@@ -36,4 +36,14 @@ public class Building {
     public void setFloors(List<Floor> floors) {
         this.floors = floors;
     }
+
+    public void storeBuildingData(Long buildingId, List<Floor> floors) {
+        this.buildingId = buildingId;
+        this.floors = floors;
+    }
+
+    public void clearBuildingData() {
+        this.buildingId = null;
+        this.floors = null;
+    }
 }
