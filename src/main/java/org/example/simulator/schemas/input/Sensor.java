@@ -1,6 +1,6 @@
-package org.example.simulator.schemas;
+package org.example.simulator.schemas.input;
 
-class Sensor {
+public class Sensor {
     private Long sensorId;
     private String sensorType;
     private double sensorValue;

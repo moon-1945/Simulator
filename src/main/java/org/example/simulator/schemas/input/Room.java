@@ -1,8 +1,8 @@
-package org.example.simulator.schemas;
+package org.example.simulator.schemas.input;
 
 import java.util.List;
 
-class Room {
+public class Room {
     private Long roomId;
     private double area;
     private int windows;

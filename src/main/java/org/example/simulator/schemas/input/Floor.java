@@ -1,9 +1,9 @@
-package org.example.simulator.schemas;
+package org.example.simulator.schemas.input;
 
 import java.util.List;
 
 
-class Floor {
+public class Floor {
     private int floorNumber;
     private List<Room> rooms;
 

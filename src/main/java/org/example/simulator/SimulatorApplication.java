@@ -9,11 +9,11 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 
-@SpringBootApplication
+@SpringBootApplication	
 public class SimulatorApplication implements CommandLineRunner {
 
-	@Autowired
-	private KafkaProducerService kafkaProducerService;
+//	@Autowired
+//	private KafkaProducerService kafkaProducerService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(SimulatorApplication.class, args);
@@ -21,8 +21,8 @@ public class SimulatorApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) {
-		kafkaProducerService.sendMessage("lab5", "user-1", "Message with key 1");
-		kafkaProducerService.sendMessage("lab5","user-2", "Message with key 2");
+	//	kafkaProducerService.sendMessage("lab5", "user-1", "Message with key 1");
+	//	kafkaProducerService.sendMessage("lab5","user-2", "Message with key 2");
 	}
 }
 

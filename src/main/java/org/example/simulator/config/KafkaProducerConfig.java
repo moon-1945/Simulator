@@ -1,4 +1,4 @@
-package org.example.simulator;
+package org.example.simulator.config;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;

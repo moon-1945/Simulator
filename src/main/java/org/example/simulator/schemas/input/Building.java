@@ -1,4 +1,4 @@
-package org.example.simulator.schemas;
+package org.example.simulator.schemas.input;
 
 import java.util.List;
 

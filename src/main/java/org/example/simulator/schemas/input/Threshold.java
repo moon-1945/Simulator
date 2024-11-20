@@ -1,6 +1,4 @@
-package org.example.simulator.schemas;
-
-import java.util.List;
+package org.example.simulator.schemas.input;
 
 
 class Threshold {
