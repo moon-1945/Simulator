@@ -4,45 +4,41 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
+import com.networknt.schema.SpecVersion;
 import com.networknt.schema.ValidationMessage;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.stereotype.Component;
 
-import java.io.InputStream;
-import java.util.Objects;
 import java.util.Set;
 
+@Component
 public class JsonValidator {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private final JsonSchemaFactory schemaFactory;
 
-    public static boolean validateJson(String kafkaMessage) {
+    public JsonValidator() {
+        this.schemaFactory = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7);
+    }
+
+    public boolean validateJson(String schema, String json) {
         try {
-            JsonNode jsonNode = objectMapper.readTree(kafkaMessage);
-            JsonSchemaFactory schemaFactory = new JsonSchemaFactory.Builder().build();
-            InputStream schemaStream = Objects.requireNonNull(JsonValidator.class.getClassLoader().getResourceAsStream("building-schema.json"));
-            JsonSchema schema = schemaFactory.getSchema(schemaStream);
-            Set<ValidationMessage> validationMessages = schema.validate(jsonNode);
+            System.out.println("Received JSON: " + json);
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode schemaNode = objectMapper.readTree(schema);
+            JsonNode jsonNode = objectMapper.readTree(json);
+
+            JsonSchema jsonSchema = schemaFactory.getSchema(schemaNode);
+            Set<ValidationMessage> validationMessages = jsonSchema.validate(jsonNode);
+
             if (!validationMessages.isEmpty()) {
-                System.out.println("JSON validation errors:");
-                for (ValidationMessage message : validationMessages) {
-                    System.out.println(message.getMessage());
-                }
+                validationMessages.forEach(msg -> System.out.println("Validation error: " + msg.getMessage()));
                 return false;
             }
             return true;
         } catch (Exception e) {
-            System.out.println("Error during JSON validation: " + e.getMessage());
+            System.out.println("Error during validation: " + e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }
 
-    public static void processKafkaMessage(ConsumerRecord<String, String> record) {
-        String kafkaMessage = record.value();
-        boolean isValid = validateJson(kafkaMessage);
-        if (isValid) {
-            System.out.println("Kafka message is valid: " + kafkaMessage);
-        } else {
-            System.out.println("Kafka message is invalid: " + kafkaMessage);
-        }
-    }
 }

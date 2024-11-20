@@ -60,7 +60,7 @@
                         "type": "string"
                       }
                     },
-                    "required": ["sensorId", "sensorType", "sensorValue", "status"]
+                    "required": ["sensorId", "sensorType", "sensorValue", "thresholds", "status"]
                   }
                 }
               },
