@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "buildingId": {
+      "type": "integer"
+    },
+    "floors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "floorNumber": {
+            "type": "integer"
+          },
+          "rooms": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "roomId": {
+                  "type": "integer"
+                },
+                "area": {
+                  "type": "number"
+                },
+                "windows": {
+                  "type": "integer"
+                },
+                "doors": {
+                  "type": "integer"
+                },
+                "sensors": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "sensorId": {
+                        "type": "integer"
+                      },
+                      "sensorType": {
+                        "type": "string"
+                      },
+                      "sensorValue": {
+                        "type": "number"
+                      },
+                      "thresholds": {
+                        "type": "object",
+                        "properties": {
+                          "min": {
+                            "type": "number"
+                          },
+                          "max": {
+                            "type": "number"
+                          }
+                        },
+                        "required": ["min", "max"]
+                      },
+                      "status": {
+                        "type": "string"
+                      }
+                    },
+                    "required": ["sensorId", "sensorType", "sensorValue", "status"]
+                  }
+                }
+              },
+              "required": ["roomId", "area", "windows", "doors", "sensors"]
+            }
+          }
+        },
+        "required": ["floorNumber", "rooms"]
+      }
+    }
+  },
+  "required": ["buildingId", "floors"]
+}

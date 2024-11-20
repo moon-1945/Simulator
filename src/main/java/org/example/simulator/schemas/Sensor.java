@@ -1,7 +1,5 @@
 package org.example.simulator.schemas;
 
-import java.util.List;
-
 class Sensor {
     private Long sensorId;
     private String sensorType;
