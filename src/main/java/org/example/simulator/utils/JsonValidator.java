@@ -1,4 +1,4 @@
-package org.example.simulator;
+package org.example.simulator.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
