@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class FloorViolationEventListener implements IFloorViolationEventListener {
     private final KafkaProducerService kafkaProducerService;
     private final Building building;
-    private Map<Long, RoomState> idToRoomState;
+    private volatile Map<Long, RoomState> idToRoomState;
     
     public FloorViolationEventListener(KafkaProducerService kafkaProducerService, Building building) {
         this.kafkaProducerService = kafkaProducerService;
