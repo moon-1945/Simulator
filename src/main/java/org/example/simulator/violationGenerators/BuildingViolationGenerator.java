@@ -8,7 +8,6 @@ import org.example.simulator.violationGenerators.roomViolationGenerators.RoomRob
 
 import java.util.*;
 import java.util.concurrent.ExecutorService;
-import java.util.function.Consumer;
 
 public class BuildingViolationGenerator {
 	private static final List<IRoomViolationGenerator> violationGenerators = new ArrayList<>();
@@ -21,12 +20,14 @@ public class BuildingViolationGenerator {
 	private final Building building;
 	private final IRoomViolationGenerator roomViolationGenerator;
 	private final ExecutorService executorService;
-	private final List<FloorViolationEventListener> listeners = new ArrayList<>();
+	private final FloorViolationEvent floorViolationEvent;
+//	private final List<IFloorViolationEventListener> listeners = new ArrayList<>();
 
-	public BuildingViolationGenerator(Building building, ExecutorService executorService) {
+	public BuildingViolationGenerator(Building building, ExecutorService executorService, FloorViolationEvent floorViolationEvent) {
 		this.building = building;
 		this.roomViolationGenerator = getRandomGenerator();
 		this.executorService = executorService;
+		this.floorViolationEvent = floorViolationEvent;
 	}
 
 	private static IRoomViolationGenerator getRandomGenerator() {
@@ -38,19 +39,19 @@ public class BuildingViolationGenerator {
 		return violationGenerators.get(randomIndex);
 	}
 
-	public void addFloorViolationEventListener(FloorViolationEventListener listener) {
-		listeners.add(listener);
-	}
-
-	public void removeFloorViolationEventListener(FloorViolationEventListener listener) {
-		listeners.remove(listener);
-	}
-
-	private void notifyListeners(Map<Long, RoomState> violations) {
-		for (FloorViolationEventListener listener : listeners) {
-			listener.onFloorViolationsReceived(violations);
-		}
-	}
+//	public void addFloorViolationEventListener(IFloorViolationEventListener listener) {
+//		listeners.add(listener);
+//	}
+//
+//	public void removeFloorViolationEventListener(IFloorViolationEventListener listener) {
+//		listeners.remove(listener);
+//	}
+//
+//	private void notifyListeners(Map<Long, RoomState> violations) {
+//		for (IFloorViolationEventListener listener : listeners) {
+//			listener.onFloorViolationsReceived(violations);
+//		}
+//	}
 
 	public void startGenerateViolations() {
 		List<Floor> floors = building.getFloors();
@@ -62,8 +63,10 @@ public class BuildingViolationGenerator {
 			executorService.submit(() -> {
 				FloorViolationGenerator floorViolationGenerator = new FloorViolationGenerator(floor, roomViolationGenerator);
 				Map<Long, RoomState> violations = floorViolationGenerator.generateViolations();
-				notifyListeners(violations);
+				floorViolationEvent.notifyListeners(violations);
 			});
 		}
 	}
 }
+
+
