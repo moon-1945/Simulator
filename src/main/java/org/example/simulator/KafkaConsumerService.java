@@ -41,7 +41,6 @@ public class KafkaConsumerService {
 				ObjectMapper objectMapper = new ObjectMapper();
 				Building building = objectMapper.readValue(schema, Building.class);
 
-				//I'm not sure about that singelton...
 				Building.getInstance().storeBuildingData(building.getBuildingId(), building.getFloors());
 
 				FloorViolationEvent floorViolationEvent = new FloorViolationEvent();

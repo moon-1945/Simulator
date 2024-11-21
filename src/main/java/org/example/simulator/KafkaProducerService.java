@@ -30,15 +30,3 @@ public class KafkaProducerService {
         }
 	}
 }
-
-/**
- * {
- *   "room_id": 101,
- *   "room_changes": {
- *     "deltaTemperature": 5.0,
- *     "deltaSmokePercent": 10,
- *     "movementLevelChanges": 0.75
- *   }
- * } according to chat gpt)))
- */
-

@@ -21,7 +21,6 @@ public class BuildingViolationGenerator {
 	private final IRoomViolationGenerator roomViolationGenerator;
 	private final ExecutorService executorService;
 	private final FloorViolationEvent floorViolationEvent;
-//	private final List<IFloorViolationEventListener> listeners = new ArrayList<>();
 
 	public BuildingViolationGenerator(Building building, ExecutorService executorService, FloorViolationEvent floorViolationEvent) {
 		this.building = building;
@@ -38,20 +37,6 @@ public class BuildingViolationGenerator {
 		int randomIndex = random.nextInt(violationGenerators.size());
 		return violationGenerators.get(randomIndex);
 	}
-
-//	public void addFloorViolationEventListener(IFloorViolationEventListener listener) {
-//		listeners.add(listener);
-//	}
-//
-//	public void removeFloorViolationEventListener(IFloorViolationEventListener listener) {
-//		listeners.remove(listener);
-//	}
-//
-//	private void notifyListeners(Map<Long, RoomState> violations) {
-//		for (IFloorViolationEventListener listener : listeners) {
-//			listener.onFloorViolationsReceived(violations);
-//		}
-//	}
 
 	public void startGenerateViolations() {
 		List<Floor> floors = building.getFloors();
