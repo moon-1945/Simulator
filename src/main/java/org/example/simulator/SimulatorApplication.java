@@ -13,9 +13,7 @@ import org.springframework.stereotype.Service;
 public class SimulatorApplication implements CommandLineRunner {
 
 
-	public static void main(String[] args) {
-		SpringApplication.run(SimulatorApplication.class, args);
-	}
+	public static void main(String[] args) { SpringApplication.run(SimulatorApplication.class, args);}
 
 	@Override
 	public void run(String... args) {
