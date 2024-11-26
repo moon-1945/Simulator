@@ -5,19 +5,21 @@ import org.example.simulator.schemas.input.Room;
 import org.example.simulator.schemas.output.OutputSimulatorMessage;
 import org.example.simulator.schemas.output.RoomChangesParameter;
 import org.example.simulator.utils.RoomStateExtractor;
-import org.example.simulator.violationGenerators.FloorViolationEventArgs;
-import org.example.simulator.violationGenerators.IFloorViolationEventListener;
+import org.example.simulator.violationGenerators.BuildingViolationsEventArgs;
+import org.example.simulator.violationGenerators.IBuildingViolationsEventListener;
 import org.example.simulator.violationGenerators.RoomState;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class FloorViolationEventListener implements IFloorViolationEventListener {
+public class BuildingViolationsEventListener implements IBuildingViolationsEventListener {
     private final KafkaProducerService kafkaProducerService;
     private final Building building;
     private volatile Map<Long, RoomState> idToRoomState;
     
-    public FloorViolationEventListener(KafkaProducerService kafkaProducerService, Building building) {
+    public BuildingViolationsEventListener(KafkaProducerService kafkaProducerService, Building building) {
         this.kafkaProducerService = kafkaProducerService;
         this.building = building;
     }
@@ -39,11 +41,12 @@ public class FloorViolationEventListener implements IFloorViolationEventListener
     }
 
     @Override
-    public void onFloorViolationsReceived(FloorViolationEventArgs violationsInfo) {
-        int totalCount = violationsInfo.getTotalCount();
-        int currentNumber = 1;
+    public void onBuildingViolationsReceived(BuildingViolationsEventArgs violations) {
+        int totalCount = violations.getViolations().size();
 
-        for (Map.Entry<Long, RoomState> entry : violationsInfo.getViolations().entrySet()) {
+        List<OutputSimulatorMessage> violationMessages = new ArrayList<>();
+
+        for (Map.Entry<Long, RoomState> entry : violations.getViolations().entrySet()) {
             Long roomId = entry.getKey();
             RoomState violation = entry.getValue();
             RoomState currentRoomState = getIdToRoomState().get(roomId);
@@ -57,12 +60,13 @@ public class FloorViolationEventListener implements IFloorViolationEventListener
             OutputSimulatorMessage outputSimulatorMessage = new OutputSimulatorMessage(
                     roomId,
                     roomChanges,
-                    totalCount,
-                    currentNumber
+                    totalCount
             );
 
-            kafkaProducerService.sendViolation(outputSimulatorMessage);
-            currentNumber++;
+            violationMessages.add(outputSimulatorMessage);
         }
+
+        violationMessages.parallelStream()
+                .forEach(kafkaProducerService::sendViolation);
     }
 }

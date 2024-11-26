@@ -1,6 +1,6 @@
 package org.example.simulator;
 
-import org.example.simulator.violationGenerators.FloorViolationEvent;
+import org.example.simulator.violationGenerators.BuildingViolationEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,13 +41,13 @@ public class KafkaConsumerService {
 
 				Building.getInstance().storeBuildingData(building.getBuildingId(), building.getFloors());
 
-				FloorViolationEvent floorViolationEvent = new FloorViolationEvent();
-				floorViolationEvent.addListener(new FloorViolationEventListener(kafkaProducerService, building));
+				BuildingViolationEvent buildingViolationsEvent = new BuildingViolationEvent();
+				buildingViolationsEvent.addListener(new BuildingViolationsEventListener(kafkaProducerService, building));
 
 				BuildingViolationGenerator buildingViolationGenerator =
-						new BuildingViolationGenerator(building, executorService, floorViolationEvent);
+						new BuildingViolationGenerator(building, executorService, buildingViolationsEvent);
 
-				buildingViolationGenerator.startGenerateViolations();
+				buildingViolationGenerator.generateViolations();
 			} else {
 				logger.error("Schema validation failed.");
 			}
