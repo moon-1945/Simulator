@@ -43,13 +43,8 @@ public class FloorViolationGenerator {
 
 		Map<Long, RoomState> resultState = new HashMap<>();
 		for(int i = 0; i < keys.size(); i++) {
+			if (i == roomsWithViolationsCount) break;
 			Long key = keys.get(i);
-
-			if(i >= roomsWithViolationsCount) {
-				//resultState.put(key, currentState.get(key));
-				continue;
-			}
-
 			resultState.put(key, roomViolationGenerator.generate(currentState.get(key)));
 		}
 
