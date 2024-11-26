@@ -32,7 +32,7 @@ public class FloorViolationEvent {
 	 *
 	 * @param violations the event to notify listeners about floor violations
 	 */
-	public void notifyListeners(Map<Long, RoomState> violations) {
+	public void notifyListeners(FloorViolationEventArgs violations) {
 		for (IFloorViolationEventListener listener : listeners) {
 			listener.onFloorViolationsReceived(violations);
 		}

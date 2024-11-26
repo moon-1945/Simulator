@@ -46,7 +46,7 @@ public class FloorViolationGenerator {
 			Long key = keys.get(i);
 
 			if(i >= roomsWithViolationsCount) {
-				resultState.put(key, currentState.get(key));
+				//resultState.put(key, currentState.get(key));
 				continue;
 			}
 

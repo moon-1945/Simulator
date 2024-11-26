@@ -7,7 +7,10 @@ import org.example.simulator.violationGenerators.roomViolationGenerators.RoomFir
 import org.example.simulator.violationGenerators.roomViolationGenerators.RoomRobberyGenerator;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -39,7 +42,7 @@ public class BuildingViolationGenerator {
 		return violationGenerators.get(random.nextInt(violationGenerators.size()));
 	}
 
-	public void startGenerateViolations() {
+	public void startGenerateViolations_() {
 		lock.lock();
 		try {
 			if (!canGenerateViolations) {
@@ -68,7 +71,7 @@ public class BuildingViolationGenerator {
 
 					lock.lock();
 					try {
-						floorViolationEvent.notifyListeners(violations);
+						//floorViolationEvent.notifyListeners(violations);
 					} finally {
 						lock.unlock();
 					}
@@ -76,6 +79,56 @@ public class BuildingViolationGenerator {
 			}
 		} finally {
 			lock.unlock();
+		}
+	}
+
+	public void startGenerateViolations() {
+		ConcurrentLinkedQueue<Map<Long, RoomState>> violations = receiveViolations();
+		notifyListeners(violations);
+	}
+
+	public ConcurrentLinkedQueue<Map<Long, RoomState>> receiveViolations() {
+		List<Floor> floors = building.getFloors();
+
+		List<Future<Map<Long, RoomState>>> futuresGeneratingViolations = new ArrayList<>();
+
+		int floorCountWithViolations = Math.min(3, floors.size());
+		for (int i = 0; i < floorCountWithViolations; i++) {
+			Floor floor = floors.get(i);
+
+			Future<Map<Long, RoomState>> future = executorService.submit(() -> {
+				IRoomViolationGenerator roomViolationGenerator = getRandomGenerator();
+				FloorViolationGenerator floorViolationGenerator = new FloorViolationGenerator(floor, roomViolationGenerator);
+				Map<Long, RoomState> violations = floorViolationGenerator.generateViolations();
+
+				return violations;
+			});
+
+			futuresGeneratingViolations.add(future);
+		}
+
+		//every element from that queue is violations on certain floor I don't know what of its exactly because of concurency
+		ConcurrentLinkedQueue<Map<Long, RoomState>> aggregatedViolations = new ConcurrentLinkedQueue<>();
+
+		for (Future<Map<Long, RoomState>> future : futuresGeneratingViolations) {
+			try {
+				Map<Long, RoomState> violations = future.get();
+				aggregatedViolations.add(violations);
+			} catch (InterruptedException | ExecutionException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return aggregatedViolations;
+	}
+
+	public void notifyListeners(ConcurrentLinkedQueue<Map<Long, RoomState>> violations) {
+		int totalCount = violations.stream()
+				.mapToInt(Map::size)
+				.sum();
+
+		for (Map<Long, RoomState> floorViolations : violations) {
+			floorViolationEvent.notifyListeners(new FloorViolationEventArgs(floorViolations, totalCount));
 		}
 	}
 

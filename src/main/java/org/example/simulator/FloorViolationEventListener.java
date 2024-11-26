@@ -5,6 +5,7 @@ import org.example.simulator.schemas.input.Room;
 import org.example.simulator.schemas.output.OutputSimulatorMessage;
 import org.example.simulator.schemas.output.RoomChangesParameter;
 import org.example.simulator.utils.RoomStateExtractor;
+import org.example.simulator.violationGenerators.FloorViolationEventArgs;
 import org.example.simulator.violationGenerators.IFloorViolationEventListener;
 import org.example.simulator.violationGenerators.RoomState;
 
@@ -38,11 +39,11 @@ public class FloorViolationEventListener implements IFloorViolationEventListener
     }
 
     @Override
-    public void onFloorViolationsReceived(Map<Long, RoomState> violations) {
-        int totalCount = violations.size();
+    public void onFloorViolationsReceived(FloorViolationEventArgs violationsInfo) {
+        int totalCount = violationsInfo.getTotalCount();
         int currentNumber = 1;
 
-        for (Map.Entry<Long, RoomState> entry : violations.entrySet()) {
+        for (Map.Entry<Long, RoomState> entry : violationsInfo.getViolations().entrySet()) {
             Long roomId = entry.getKey();
             RoomState violation = entry.getValue();
             RoomState currentRoomState = getIdToRoomState().get(roomId);
