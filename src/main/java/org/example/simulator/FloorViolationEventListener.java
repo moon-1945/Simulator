@@ -39,20 +39,29 @@ public class FloorViolationEventListener implements IFloorViolationEventListener
 
     @Override
     public void onFloorViolationsReceived(Map<Long, RoomState> violations) {
+        int totalCount = violations.size();
+        int currentNumber = 1;
+
         for (Map.Entry<Long, RoomState> entry : violations.entrySet()) {
             Long roomId = entry.getKey();
             RoomState violation = entry.getValue();
             RoomState currentRoomState = getIdToRoomState().get(roomId);
 
             RoomChangesParameter roomChanges = new RoomChangesParameter(
-                    (int)(violation.getTemperature() - currentRoomState.getTemperature()),
+                    (int) (violation.getTemperature() - currentRoomState.getTemperature()),
                     violation.getSmokePercent() - currentRoomState.getSmokePercent(),
                     violation.getMovementLevel() - currentRoomState.getMovementLevel()
             );
 
-            OutputSimulatorMessage outputSimulatorMessage = new OutputSimulatorMessage(roomId, roomChanges);
+            OutputSimulatorMessage outputSimulatorMessage = new OutputSimulatorMessage(
+                    roomId,
+                    roomChanges,
+                    totalCount,
+                    currentNumber
+            );
 
             kafkaProducerService.sendViolation(outputSimulatorMessage);
+            currentNumber++;
         }
     }
 }
