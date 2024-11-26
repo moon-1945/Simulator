@@ -5,6 +5,7 @@ import org.example.simulator.schemas.input.Room;
 import org.example.simulator.schemas.output.OutputSimulatorMessage;
 import org.example.simulator.schemas.output.RoomChangesParameter;
 import org.example.simulator.utils.RoomStateExtractor;
+import org.example.simulator.violationGenerators.FloorViolationEventArgs;
 import org.example.simulator.violationGenerators.IFloorViolationEventListener;
 import org.example.simulator.violationGenerators.RoomState;
 
@@ -38,21 +39,30 @@ public class FloorViolationEventListener implements IFloorViolationEventListener
     }
 
     @Override
-    public void onFloorViolationsReceived(Map<Long, RoomState> violations) {
-        for (Map.Entry<Long, RoomState> entry : violations.entrySet()) {
+    public void onFloorViolationsReceived(FloorViolationEventArgs violationsInfo) {
+        int totalCount = violationsInfo.getTotalCount();
+        int currentNumber = 1;
+
+        for (Map.Entry<Long, RoomState> entry : violationsInfo.getViolations().entrySet()) {
             Long roomId = entry.getKey();
             RoomState violation = entry.getValue();
             RoomState currentRoomState = getIdToRoomState().get(roomId);
 
             RoomChangesParameter roomChanges = new RoomChangesParameter(
-                    (int)(violation.getTemperature() - currentRoomState.getTemperature()),
+                    (int) (violation.getTemperature() - currentRoomState.getTemperature()),
                     violation.getSmokePercent() - currentRoomState.getSmokePercent(),
                     violation.getMovementLevel() - currentRoomState.getMovementLevel()
             );
 
-            OutputSimulatorMessage outputSimulatorMessage = new OutputSimulatorMessage(roomId, roomChanges);
+            OutputSimulatorMessage outputSimulatorMessage = new OutputSimulatorMessage(
+                    roomId,
+                    roomChanges,
+                    totalCount,
+                    currentNumber
+            );
 
             kafkaProducerService.sendViolation(outputSimulatorMessage);
+            currentNumber++;
         }
     }
 }

@@ -37,4 +37,11 @@ public class Floor {
                 ", rooms=" + rooms +
                 '}';
     }
+
+    public int getViolationsCount() {
+        return (int) rooms.stream()
+                .filter(Room::hasViolation)
+                .count();
+    }
+
 }
