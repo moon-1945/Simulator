@@ -23,7 +23,10 @@ public class KafkaProducerService {
         try {
             String jsonViolation = objectMapper.writeValueAsString(violation);
 
+			System.out.println("Generated_vilation: " + jsonViolation);
+
 			kafkaTemplate.send("violations_topic", jsonViolation);
+
         } catch (JsonProcessingException e) {
 			logger.error(e.getMessage());
 			e.printStackTrace();

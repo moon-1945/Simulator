@@ -33,8 +33,10 @@ public class FloorViolationGenerator {
 
 		int roomCount = floor.getRooms().size();
 
-		int roomsWithViolationsCount =
-				(int)Math.floor(clip((roomCount * 1.0 / 2) * (1 + random.nextGaussian() / 2.57), 0, roomCount) + 0.5);
+		int roomsWithViolationsCount = (int) Math.floor(
+				clip((roomCount * 0.5) + random.nextGaussian() * (roomCount * 0.2), 0, roomCount)
+		);
+
 
 		List<Long> keys = new ArrayList<>(currentState.keySet());
 		Collections.shuffle(keys);

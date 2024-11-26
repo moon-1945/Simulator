@@ -7,6 +7,7 @@ public class Room {
     private double area;
     private int windows;
     private int doors;
+    private boolean hasViolation;
     private List<Sensor> sensors;
 
     public Room() {}
@@ -21,6 +22,14 @@ public class Room {
 
     public Long getRoomId() {
         return roomId;
+    }
+
+    public boolean hasViolation() {
+        return hasViolation;
+    }
+
+    public void setViolation(boolean hasViolation) {
+        this.hasViolation = hasViolation;
     }
 
     public void setRoomId(Long roomId) {

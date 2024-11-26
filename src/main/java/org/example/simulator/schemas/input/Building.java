@@ -46,4 +46,16 @@ public class Building {
         this.buildingId = null;
         this.floors = null;
     }
+
+    public int getTotalCount() {
+        return this.floors.stream()
+                .mapToInt(floor -> floor.getRooms().size())
+                .sum();
+    }
+
+    public int getCurrentNumber() {
+        return this.floors.stream()
+                .mapToInt(Floor::getViolationsCount)
+                .sum();
+    }
 }

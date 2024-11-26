@@ -21,7 +21,6 @@ public class JsonValidator {
 
     public boolean validateJson(String schema, String json) {
         try {
-            System.out.println("Received JSON: " + json);
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode schemaNode = objectMapper.readTree(schema);
             JsonNode jsonNode = objectMapper.readTree(json);

@@ -36,8 +36,6 @@ public class KafkaConsumerService {
 			boolean isValid = jsonValidator.validateJson(schema, schema);
 
 			if (isValid) {
-				System.out.println("Schema is valid.");
-
 				ObjectMapper objectMapper = new ObjectMapper();
 				Building building = objectMapper.readValue(schema, Building.class);
 
@@ -57,9 +55,6 @@ public class KafkaConsumerService {
 			logger.error("Error parsing or validating the schema: " + e.getMessage());
 			e.printStackTrace();
 		}
-
-		// received schema -> parse schema -> algorithm for generation violations() -> send message to api (use multithreading)
-		// Генерація порушень
 	}
 }
 
