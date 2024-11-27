@@ -1,5 +1,6 @@
 package org.example.simulator.violationGenerators;
 
+import org.example.simulator.utils.MathUtils;
 import org.example.simulator.utils.RoomStateExtractor;
 import org.example.simulator.schemas.input.Floor;
 import org.example.simulator.schemas.input.Room;
@@ -29,14 +30,12 @@ public class FloorViolationGenerator {
 	}
 
 	private Map<Long, RoomState> generate(Map<Long, RoomState> currentState) {
-		Random random = new Random();
-
 		int roomCount = floor.getRooms().size();
 
-		int roomsWithViolationsCount = (int) Math.floor(
-				clip((roomCount * 0.5) + random.nextGaussian() * (roomCount * 0.2), 0, roomCount)
-		);
-
+		int roomsWithViolationsCount =
+				MathUtils.roundToNearestInt(
+						MathUtils.clip(
+								MathUtils.generateNormalValue((roomCount + 1) * 0.5, (roomCount - 1) * 0.5 / 1.95), 1, roomCount));
 
 		List<Long> keys = new ArrayList<>(currentState.keySet());
 		Collections.shuffle(keys);
@@ -49,14 +48,5 @@ public class FloorViolationGenerator {
 		}
 
 		return resultState;
-	}
-
-	private static double clip(double value, double min, double max) {
-		if (value < min) {
-			return min;
-		} else if (value > max) {
-			return max;
-		}
-		return value;
 	}
 }
