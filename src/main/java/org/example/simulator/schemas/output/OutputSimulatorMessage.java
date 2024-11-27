@@ -4,15 +4,13 @@ public class OutputSimulatorMessage {
 	private long room_id;
 	private RoomChangesParameter room_changes;
 	private int total_count;
-	private int current_number;
 
 	public OutputSimulatorMessage() {}
 
-	public OutputSimulatorMessage(long room_id, RoomChangesParameter room_changes, int total_count, int current_number) {
+	public OutputSimulatorMessage(long room_id, RoomChangesParameter room_changes, int total_count) {
 		this.room_id = room_id;
 		this.room_changes = room_changes;
 		this.total_count = total_count;
-		this.current_number = current_number;
 	}
 
 	public long getRoom_id() {
@@ -37,13 +35,5 @@ public class OutputSimulatorMessage {
 
 	public void setTotal_count(int total_count) {
 		this.total_count = total_count;
-	}
-
-	public int getCurrent_number() {
-		return current_number;
-	}
-
-	public void setCurrent_number(int current_number) {
-		this.current_number = current_number;
 	}
 }
